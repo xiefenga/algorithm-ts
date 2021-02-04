@@ -3,7 +3,7 @@ interface Comparable<T> {
 }
 
 function instanceofComparable(val: any): val is Comparable<any> {
-  return val && val.compareTo;
+  return val && val.compareTo && typeof val.compareTo(val) === 'number';
 }
 
 export default Comparable;

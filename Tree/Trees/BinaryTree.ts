@@ -1,36 +1,18 @@
-import { TreeNode } from "./TreeNode";
-import { Queue, Stack } from "../Linear";
-import Visitor, { defalutVisitor } from "./helper/Visitor";
-import BinaryTreeInfo from "./helper/printer/BinaryTreeInfo";
+import { TreeNode } from "../TreeNode";
+import { Queue, Stack } from "../../Linear";
+import BinaryTreeInfo from "../helper/printer/BinaryTreeInfo";
 
-
-
+const defaultVisit = (val: any) => console.log(val);
 
 abstract class BinaryTree<T> implements BinaryTreeInfo {
 
-  protected size: number = 0;
-  protected visitor: Visitor<TreeNode<T>>;
   protected root: TreeNode<T> | null = null;
-
-  constructor();
-  constructor(visitor: Visitor<TreeNode<T>>);
-  constructor(visitor = defalutVisitor) {
-    this.visitor = visitor;
-  }
 
   public abstract insert(val: T): void;
 
   public abstract remove(val: T): void;
 
   protected abstract createNode(val: T): TreeNode<T>
-
-  public getSize(): number {
-    return this.size;
-  }
-
-  public isEmpty(): boolean {
-    return this.size === 0;
-  }
 
   // 前驱节点，中序遍历时的前一个节点
   protected predecessor(root: TreeNode<T> | null): TreeNode<T> | null {
@@ -71,20 +53,20 @@ abstract class BinaryTree<T> implements BinaryTreeInfo {
     return root.parent;
   }
 
-  public preorderTraversal(visitor = this.visitor, root = this.root): void {
+  public preorderTraversal(visit = defaultVisit, root = this.root): void {
     if (root) {
       const stack = new Stack<TreeNode<T>>();
       stack.push(root);
       while (!stack.isEmpty()) {
         const node = stack.pop();
-        visitor.visit(node);
+        visit(node);
         node.right && stack.push(node.right);
         node.left && stack.push(node.left);
       }
     }
   }
 
-  public inorderTraversal(visitor = this.visitor, root = this.root): void {
+  public inorderTraversal(visit = defaultVisit, root = this.root): void {
     if (root) {
       const stack = new Stack<TreeNode<T>>();
       let node: TreeNode<T> | null = root;
@@ -94,21 +76,21 @@ abstract class BinaryTree<T> implements BinaryTreeInfo {
           node = node.left;
         }
         node = stack.pop();
-        visitor.visit(node);
+        visit(node);
         node = node.right;
       }
     }
   }
 
-  public postorderTraversal(visitor = this.visitor, root = this.root): void {
+  public postorderTraversal(visit = defaultVisit, root = this.root): void {
     if (root) {
       const stack = new Stack<TreeNode<T>>();
       stack.push(root);
-      let prev: TreeNode<T> = root; // 前一个弹出的元素
+      let prev: TreeNode<T> | null = null; // 前一个弹出/访问的元素
       while (!stack.isEmpty()) {
         const top = stack.peek();
         if (top.isLeave() || (top.left === prev || top.right === prev)) {
-          visitor.visit(prev = stack.pop());
+          visit(prev = stack.pop());
         } else {
           top.right && stack.push(top.right);
           top.left && stack.push(top.left);
@@ -117,13 +99,13 @@ abstract class BinaryTree<T> implements BinaryTreeInfo {
     }
   }
 
-  public levelOrderTraversal(visitor = this.visitor, root = this.root) {
+  public levelOrderTraversal(visit = defaultVisit, root = this.root) {
     if (root) {
       const queue = new Queue<TreeNode<T>>();
       queue.enqueue(root);
       while (!queue.isEmpty()) {
         const node = queue.dequeue();
-        visitor.visit(node);
+        visit(node);
         node.left && queue.enqueue(node.left);
         node.right && queue.enqueue(node.right);
       }
