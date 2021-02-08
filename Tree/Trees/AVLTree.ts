@@ -49,8 +49,19 @@ class AVLTree<T> extends BinarySearchTree<T> {
     return root;
   }
 
-  // LL 右单旋
-  private rotateRight(root: AVLNode<T>) {
+  /**
+   * LL 右单旋
+   *
+   *  对节点进行右旋转操作，返回右旋转之后新的根节点
+   *         y                            x
+   *        / \                         /   \
+   *       x   T4     向右旋转(y)       z     y
+   *      / \       -------------->  / \   /  \
+   *     z  T3                      T1 T2 T3  T4
+   *    / \
+   *   T1 T2
+   */
+  private rotateRight(root: AVLNode<T>): AVLNode<T> {
     const left = <AVLNode<T>>root.left;
     const leftRight = left.right;
     // 旋转
@@ -68,8 +79,19 @@ class AVLTree<T> extends BinarySearchTree<T> {
     return left;
   }
 
-  // RR  左单旋
-  private rotateLeft(root: AVLNode<T>) {
+  /**
+   *  RR  左单旋
+   * 
+   *  对节点进行左旋转操作，返回左旋转之后新的根节点
+   *         y                            x
+   *        / \                         /   \
+   *       T1  x     向右旋转(y)       y     z
+   *          / \    -------------->  / \   / \
+   *        T2  z                   T1 T2 T3 T4
+   *           / \
+   *          T3 T4
+   */
+  private rotateLeft(root: AVLNode<T>): AVLNode<T> {
     const right = <AVLNode<T>>root.right;
     const rightLeft = right.left;
     // 旋转
@@ -100,7 +122,7 @@ class AVLTree<T> extends BinarySearchTree<T> {
     newParent.parent = newGrand;
   }
 
-  private updateHeight(root: AVLNode<T>) {
+  private updateHeight(root: AVLNode<T>): void {
     root.height = Math.max(root.right?.height || 0, root.left?.height || 0) + 1;
   }
 
