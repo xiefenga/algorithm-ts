@@ -1,4 +1,4 @@
-import TreeNode from "./TreeNode";
+import TreeNode from './TreeNode'
 
 class AVLNode<T> extends TreeNode<T> {
   public height: number = 1;

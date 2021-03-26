@@ -1,5 +1,5 @@
-import RBNode from "../TreeNode/Nodes/RBNode";
-import BinarySearchTree from "./BinarySearchTree";
+import { RBNode } from '../TreeNode'
+import BinarySearchTree from './BinarySearchTree'
 
 class RedBlackTree<T> extends BinarySearchTree<T> {
 
@@ -237,9 +237,6 @@ class RedBlackTree<T> extends BinarySearchTree<T> {
     this.root === root && (this.root = right);
   }
 
-  public getValue(node: RBNode<T>): any {
-    return `${node.val}-p(${node.parent?.val || null})-c(${node.color ? 'red' : 'black'})`
-  }
 }
 
 export default RedBlackTree;

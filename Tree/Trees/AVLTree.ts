@@ -1,5 +1,5 @@
-import { AVLNode } from "../TreeNode";
-import BinarySearchTree from "./BinarySearchTree";
+import { AVLNode } from '../TreeNode'
+import BinarySearchTree from './BinarySearchTree'
 
 class AVLTree<T> extends BinarySearchTree<T> {
 
@@ -83,9 +83,9 @@ class AVLTree<T> extends BinarySearchTree<T> {
    *  RR  左单旋
    * 
    *  对节点进行左旋转操作，返回左旋转之后新的根节点
-   *         y                            x
-   *        / \                         /   \
-   *       T1  x     向右旋转(y)       y     z
+   *          y                             x
+   *        /  \                          /  \
+   *       T1  x     向右旋转(y)         y     z
    *          / \    -------------->  / \   / \
    *        T2  z                   T1 T2 T3 T4
    *           / \
@@ -124,10 +124,6 @@ class AVLTree<T> extends BinarySearchTree<T> {
 
   private updateHeight(root: AVLNode<T>): void {
     root.height = Math.max(root.right?.height || 0, root.left?.height || 0) + 1;
-  }
-
-  public getValue(node: AVLNode<T>) {
-    return `${node.val}-p(${node.parent?.val || null})-f(${node.balanceFactor})`
   }
 }
 

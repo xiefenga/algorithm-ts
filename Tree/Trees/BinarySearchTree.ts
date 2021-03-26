@@ -1,12 +1,10 @@
-import { TreeNode } from "../TreeNode";
-import BinaryTree from "./BinaryTree";
-import { instanceofComparable } from "../helper/Comparable";
-import Comparator, { defaultComparator } from "../helper/Comparator";
-
+import BinaryTree from './BinaryTree'
+import { TreeNode } from '../TreeNode'
+import { Comparator, defaultComparator } from '../../types'
 
 class BinarySearchTree<T> extends BinaryTree<T> {
 
-  // 比较器是一个拥有 compare(a, b): number 方法的对象
+  // 比较器是一个 compare(a, b): number 的方法
   protected comparator: Comparator<T>;
 
   // 创建BST对象时，如果不传入比较器有默认的比较器 (a, b) => a - b
@@ -17,12 +15,8 @@ class BinarySearchTree<T> extends BinaryTree<T> {
     this.comparator = comparator;
   }
 
-  // 如果 类型T 拥有 compareTo(b: T): number 的方法，则无需比较器
   protected compare(val1: T, val2: T): number {
-    if (instanceofComparable(val1)) {
-      return val1.compareTo(val2);
-    }
-    return this.comparator.compare(val1, val2);
+    return this.comparator(val1, val2);
   }
 
   protected createNode(val: T): TreeNode<T> {

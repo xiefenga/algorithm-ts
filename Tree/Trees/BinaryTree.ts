@@ -1,10 +1,9 @@
-import { TreeNode } from "../TreeNode";
-import { Queue, Stack } from "../../Linear";
-import BinaryTreeInfo from "../helper/printer/BinaryTreeInfo";
+import { TreeNode } from '../TreeNode'
+import { Queue, Stack } from '../../Linear'
 
 const defaultVisit = (val: any) => console.log(val);
 
-abstract class BinaryTree<T> implements BinaryTreeInfo {
+abstract class BinaryTree<T> {
 
   protected root: TreeNode<T> | null = null;
 
@@ -110,19 +109,6 @@ abstract class BinaryTree<T> implements BinaryTreeInfo {
         node.right && queue.enqueue(node.right);
       }
     }
-  }
-
-  public getRoot(): TreeNode<T> | null {
-    return this.root;
-  }
-  public getLeft(node: TreeNode<T>): TreeNode<T> | null {
-    return node.left;
-  }
-  public getRight(node: TreeNode<T>): TreeNode<T> | null {
-    return node.right;
-  }
-  public getValue(node: TreeNode<T>): any {
-    return node.val;
   }
 }
 
