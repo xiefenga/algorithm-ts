@@ -31,6 +31,17 @@ abstract class BinaryHeap<T> implements Heap<T> {
     return top;
   }
 
+  replace(ele: T): T | null {
+    const N = this.size;
+    if (N === 0) {
+      return null;
+    }
+    const old = this.heap[0];
+    this.heap[0] = ele;
+    this.siftDown(0);
+    return old;
+  }
+
   // 上滤调整，k：开始调整的索引
   private siftUp(k: number) {
     while (k > 0 && this.compare(k, (k - 1) >> 1)) {

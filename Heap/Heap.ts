@@ -5,6 +5,7 @@ interface Heap<T> {
   add(ele: T): void
   peek(): T | null
   removeTop(): T | null
+  replace(ele: T): T | null
 }
 
 export default Heap
