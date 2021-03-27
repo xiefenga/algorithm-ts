@@ -31,7 +31,7 @@ abstract class BinaryHeap<T> implements Heap<T> {
     return top;
   }
 
-  replace(ele: T): T | null {
+  public replace(ele: T): T | null {
     const N = this.size;
     if (N === 0) {
       return null;
