@@ -1,5 +1,5 @@
-export { default as TreeNode } from './Nodes/TreeNode'
+export { default as TreeNode } from './TreeNode'
 
-export { default as AVLNode } from './Nodes/AVLNode'
+export { default as AVLNode } from './AVLNode'
 
-export { default as RBNode } from './Nodes/RBNode'
+export { default as RBNode } from './RBNode'

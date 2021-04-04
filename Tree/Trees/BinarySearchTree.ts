@@ -4,7 +4,7 @@ import { Comparator, defaultComparator } from '../../types'
 
 class BinarySearchTree<T> extends BinaryTree<T> {
 
-  // 比较器是一个 compare(a, b): number 的方法
+  // 比较器是一个方法签名为 compare(a, b): number 的方法
   protected comparator: Comparator<T>;
 
   // 创建BST对象时，如果不传入比较器有默认的比较器 (a, b) => a - b
