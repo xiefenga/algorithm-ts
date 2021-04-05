@@ -1,39 +1,36 @@
-import Node from "./Node";
+import Node from './Node'
 
 class Stack<T> {
 
     private top: Node<T> | null = null;
 
-    private size: number = 0;
+    private N: number = 0;
 
     public push(val: T): void {
         this.top = new Node(val, this.top);
-        this.size++;
+        this.N++;
     }
 
-    public pop(): T {
-        if (!this.isEmpty()) {
-            const top = <Node<T>>this.top;
+    public pop(): T | undefined {
+        if (this.top) {
+            const top = this.top;
             this.top = top.next;
-            this.size--;
+            this.N--;
             return top.val;
         }
-        throw new Error('stack is empty');
+        return undefined;
     }
 
-    public peek(): T {
-        if (this.isEmpty()) {
-            throw new Error('stack is empty');
-        }
-        return (<Node<T>>this.top).val;
+    public peek(): T | undefined {
+        return this.top ? this.top.val : undefined
     }
 
-    public isEmpty() {
+    public isEmpty(): boolean {
         return this.top === null;
     }
 
-    public getSize() {
-        return this.size;
+    public get size(): number {
+        return this.N;
     }
 }
 
