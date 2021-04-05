@@ -1,4 +1,4 @@
-import { AVLNode } from '../TreeNode'
+import { AVLNode } from '../Nodes'
 import BinarySearchTree from './BinarySearchTree'
 
 class AVLTree<T> extends BinarySearchTree<T> {

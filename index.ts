@@ -1,15 +1,7 @@
-export { Queue, Stack } from './Linear'
+export * from './Linear'
 
-export { BinaryTree, BinarySearchTree, AVLTree, RedBlackTree } from './Tree'
+export * from './Tree'
 
-export { Heap, BinaryHeap, MaxHeap, MinHeap } from './Heap'
+export * from './Heap'
 
-export {
-  bubbleSort,
-  selectionSort,
-  insertionSort,
-  shellSort,
-  mergeSor,
-  quickSort,
-  heapSort
-} from './Sort'
+export * from './Sort'

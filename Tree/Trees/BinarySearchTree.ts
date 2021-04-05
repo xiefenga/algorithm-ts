@@ -1,5 +1,5 @@
+import { TreeNode } from '../Nodes'
 import BinaryTree from './BinaryTree'
-import { TreeNode } from '../TreeNode'
 import { Comparator, defaultComparator } from '../../types'
 
 class BinarySearchTree<T> extends BinaryTree<T> {

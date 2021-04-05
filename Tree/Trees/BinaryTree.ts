@@ -1,4 +1,4 @@
-import { TreeNode } from '../TreeNode'
+import { TreeNode } from '../Nodes'
 import { Queue, Stack } from '../../Linear'
 
 abstract class BinaryTree<T> {

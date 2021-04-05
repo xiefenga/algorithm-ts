@@ -1,4 +1,4 @@
-import { RBNode } from '../TreeNode'
+import { RBNode } from '../Nodes'
 import BinarySearchTree from './BinarySearchTree'
 
 class RedBlackTree<T> extends BinarySearchTree<T> {
