@@ -1,0 +1,1 @@
+export const ELEMENT_NOT_FOUNT = -1
