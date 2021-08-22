@@ -1,173 +1,213 @@
-const depthFirstSearch = Symbol('depthFirstSearch')
-const topologicalSortByBFS = Symbol('topologicalSortByBFS')
-const topologicalSortByDFS = Symbol('topologicalSortByDFS')
-class Graph {
-    #vertices = [];
-    #adj = new Map();
 
-    constructor(directed = false) {
-        this.isDirected = directed
-    }
-    addVertex(v) {
-        if (this.#vertices.includes(v)) return
-        this.#vertices.push(v)
-        this.#adj.set(v, [])
-    }
+type Visitor<T> = (vertex: T, neighbors: Set<T>) => void
 
-    addEdge(v, w) {
-        if (!this.#adj.get(v)) this.addVertex(v)
-        if (!this.#adj.get(w)) this.addVertex(w)
-        const neighbours = this.#adj.get(v)
-        if (!neighbours.includes(w)) {
-            neighbours.push(w)
-            if (!this.isDirected) this.#adj.get(w).push(v)
-        }
-    }
+class Edge<V, W> {
 
-    removeVertice(v) {
-        const index = this.#vertices.indexOf(v)
-        if (index === -1) return
-        this.#vertices.splice(index, 1)
-        this.#adj.delete(v)
-        for (const adj of this.#adj) {
-            const neighbours = adj[1]
-            const index = neighbours.indexOf(v)
-            if (index !== -1) {
-                neighbours.splice(index, 1)
-            }
-        }
-    }
+	public constructor(
+		public from: V,
+		public to: V,
+		public weight: W
+	) { }
 
-    removeEdge(v, w) {
-        const neighbours = this.#adj.get(v)
-        const index = neighbours.indexOf(w)
-        if (index === -1) return
-        neighbours.splice(index, 1)
-        if (!this.isDirected) {
-            const neighbours = this.#adj.get(w)
-            const index = neighbours.indexOf(v)
-            neighbours.splice(index, 1)
-        }
-    }
+	public equals(edge: Edge<V, W>, dircted: boolean) {
+		const { from, to, weight } = edge
+		const flag = dircted
+			? this.from == from && this.to == to
+			: (this.from == from && this.to == to) ||
+			(this.to == from && this.from == to)
 
-    bfs(v, callback) {
-        const queue = []
-        const marked = []
-        queue.unshift(v)
-        marked.push(v)
-        callback && callback(v, null)
-        while (queue.length !== 0) {
-            const vertex = queue.pop()
-            const neighours = this.#adj.get(vertex)
-            for (const n of neighours) {
-                if (!marked.includes(n)) {
-                    queue.unshift(n)
-                    marked.push(n)
-                    callback && callback(n, vertex)
-                }
-            }
-        }
-    }
+		return flag && this.weight == weight
+	}
+}
 
-    dfs(v, callback) {
-        const marked = []
-        this[depthFirstSearch](v, callback, marked)
-    }
+class Graph<V> {
 
-    [depthFirstSearch](v, callback, marked) {
-        marked.push(v)
-        const neighours = this.#adj.get(v)
-        callback && callback(v, neighours)
-        for (const n of neighours) {
-            if (!marked.includes(n)) {
-                this[depthFirstSearch](n, callback, marked)
-            }
-        }
-    }
+	protected vertices = new Set<V>()
 
-    getPath(v, w) {
-        const edgeTo = new Map()
-        this.bfs(v, (cur, prev) => {
-            edgeTo.set(cur, prev)
-        })
-        if (edgeTo.get(w) != null) {
-            const path = []
-            while (w !== null) {
-                path.push(w)
-                w = edgeTo.get(w)
-            }
-            return path.reverse()
-        }
-        return null
-    }
+	protected adj = new Map<V, Set<V>>()
 
-    topologicalSort(method = 'BFS') {
-        return method == 'BFS' ? this[topologicalSortByBFS]() : this[topologicalSortByDFS]()
-    }
+	#isDirected: boolean
 
-    [topologicalSortByBFS]() {
-        if (!this.isDirected) {
-            throw new Error('Graph must be DAG')
-        }
-        const inDegrees = new Map()
-        for (const v of this.#adj) {
-            const num = inDegrees.get(v[0]) || 0
-            inDegrees.set(v[0], num)
-            for (const n of v[1]) {
-                const num = inDegrees.get(n) || 0
-                inDegrees.set(n, num + 1)
-            }
-        }
-        const queue = []
-        for (const inEdge of inDegrees) {
-            const v = inEdge[0]
-            const inNum = inEdge[1]
-            if (inNum == 0) {
-                queue.unshift(v)
-            }
-        }
-        const res = []
-        while (queue.length != 0) {
-            const v = queue.pop()
-            console.log(v)
-            res.push(v)
-            inDegrees.delete(v)
-            const neighbours = this.#adj.get(v)
-            for (const n of neighbours) {
-                const num = inDegrees.get(n)
-                inDegrees.set(n, num - 1)
-                if (num - 1 == 0) {
-                    queue.unshift(n)
-                }
-            }
-        }
-        if (res.length != this.#vertices.length) {
-            throw new Error('Graph must be DAG')
-        }
-        return res
-    }
+	public constructor()
+	public constructor(directed: boolean)
+	public constructor(directed: boolean = false) {
+		this.#isDirected = directed
+	}
 
-    [topologicalSortByDFS]() {
-        return null
-    }
+	public isDirected(): boolean {
+		return this.#isDirected
+	}
 
-    getVertices() {
-        return this.#vertices
-    }
+	public addVertex(v: V): void {
+		if (!this.vertices.has(v)) {
+			this.vertices.add(v)
+			this.adj.set(v, new Set<V>())
+		}
+	}
 
-    getAdj() {
-        return this.#adj
-    }
+	public addEdge(from: V, to: V): void {
 
-    toString() {
-        let s = ''
-        for (let i = 0; i < this.#vertices.length; i++) {
-            s += `${this.#vertices[i]} -> `
-            const neighbors = this.#adj.get(this.#vertices[i])
-            s += `[${neighbors.join(' , ')}] \n`
-        }
-        return s
-    }
+		this.addVertex(from)
+
+		this.addVertex(to)
+
+		const neighbours = this.adj.get(from)!
+
+		if (!neighbours.has(to)) {
+			neighbours.add(to)
+			if (!this.#isDirected) {
+				this.adj.get(to)!.add(from)
+			}
+		}
+	}
+
+	public removeVertice(v: V): void {
+		this.vertices.delete(v)
+		this.adj.delete(v)
+		for (const [, neighbours] of this.adj) {
+			neighbours.delete(v)
+		}
+	}
+
+	public removeEdge(from: V, to: V): void {
+		if (this.vertices.has(from) && this.vertices.has(to)) {
+			this.adj.get(from)!.delete(to)
+			if (!this.#isDirected) {
+				this.adj.get(to)!.delete(from)
+			}
+		}
+	}
+
+	public bfs(root: V, visitor: Visitor<V>): void {
+		Graph.bfs(this, root, visitor)
+	}
+
+	public dfs(root: V, visitor: Visitor<V>): void {
+		if (this.vertices.has(root)) {
+			const marked: V[] = []
+			this.depthFirstSearch(root, marked, visitor)
+		}
+	}
+
+	private depthFirstSearch(v: V, marked: V[], visitor: Visitor<V>): void {
+		marked.push(v)
+		const neighours = this.adj.get(v)!
+		visitor(v, neighours)
+		for (const n of neighours) {
+			if (!marked.includes(n)) {
+				this.depthFirstSearch(n, marked, visitor)
+			}
+		}
+	}
+
+	public static dfs<V>(G: Graph<V>, root: V, visitor: Visitor<V>): void {
+		G.dfs(root, visitor)
+	}
+
+	public static bfs<V>(G: Graph<V>, root: V, visitor: Visitor<V>): void {
+		if (G.vertices.has(root)) {
+			const queue: V[] = []
+			const marked: V[] = []
+			queue.unshift(root)
+			marked.push(root)
+			while (queue.length) {
+				const vertex = queue.pop()!
+				const neighours = G.adj.get(vertex)!
+				visitor(vertex, neighours)
+				for (const neighour of neighours) {
+					if (!marked.includes(neighour)) {
+						queue.unshift(neighour)
+						marked.push(neighour)
+					}
+				}
+			}
+		}
+	}
+
+	public static topologicalSortByBFS<V>(G: Graph<V>): V[] {
+		// 入度
+		const inDegrees = new Map<V, number>()
+
+		for (const v of G.adj) {
+			const num = inDegrees.get(v[0]) ?? 0
+			inDegrees.set(v[0], num)
+			for (const n of v[1]) {
+				const num = inDegrees.get(n) ?? 0
+				inDegrees.set(n, num + 1)
+			}
+		}
+
+		const queue: V[] = []
+
+		for (const [v, inNum] of inDegrees) {
+			if (inNum === 0) {
+				queue.unshift(v)
+			}
+		}
+
+		const res: V[] = []
+
+		while (queue.length) {
+			const v = queue.pop()!
+			res.push(v)
+			inDegrees.delete(v)
+			const neighbours = G.adj.get(v)!
+			for (const n of neighbours) {
+				const num = inDegrees.get(n)!
+				inDegrees.set(n, num - 1)
+				if (num - 1 === 0) {
+					queue.unshift(n)
+				}
+			}
+		}
+		if (res.length !== G.vertices.size) {
+			throw new Error('Graph must be DAG')
+		}
+		return res
+	}
+
+	public static topologicalSortByDFS<V>(G: Graph<V>): V[] {
+
+		if (!G.isDirected()) {
+			// DAG 有向无环图
+			throw new Error('Graph must be DAG')
+		}
+
+		const marked: V[] = []
+
+		const reversePost: V[] = []
+
+		for (const v of G.vertices) {
+			if (!marked.includes(v)) {
+				this.topologicalSortDFS(G, v, marked, reversePost)
+			}
+		}
+
+		return reversePost
+	}
+
+	private static topologicalSortDFS<V>(G: Graph<V>, root: V, marked: V[], reversePost: V[]) {
+		marked.push(root)
+		const neighbors = G.adj.get(root)!.values()
+		for (const v of neighbors) {
+			if (!marked.includes(v)) {
+				this.topologicalSortDFS(G, v, marked, reversePost)
+			}
+		}
+		reversePost.push(root)
+	}
+
+
+	public toString(): string {
+		const strs: string[] = []
+		for (const vertex of this.vertices) {
+			const neighbours = Array.from(this.adj.get(vertex)!.values())
+			strs.push(
+				`${vertex} -> [ ${neighbours.join(' , ')} ]`
+			)
+		}
+		return strs.join('\n')
+	}
 }
 
 export default Graph
