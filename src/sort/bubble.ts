@@ -1,9 +1,8 @@
-import Comparator, { defaultComparator } from '@/types/helper/Comparator'
+import Comparator from '@/types/helper/Comparator'
 
-function bubbleSort<T>(arr: T[], comparator: Comparator<T> = defaultComparator) {
+function bubbleSort<T>(arr: T[], comparator: Comparator<T>) {
   const len = arr.length
-  let lastExchangeIndex = 0,
-    sortedBorder = len - 1
+  let lastExchangeIndex = 0, sortedBorder = len - 1
   for (let i = 0; i < len - 1; i++) {
     lastExchangeIndex = 0
     for (let j = 0; j < sortedBorder; j++) {
@@ -12,7 +11,9 @@ function bubbleSort<T>(arr: T[], comparator: Comparator<T> = defaultComparator) 
         lastExchangeIndex = j
       }
     }
-    if (lastExchangeIndex === 0) { break }
+    if (lastExchangeIndex === 0) {
+      break
+    }
     sortedBorder = lastExchangeIndex
   }
 }

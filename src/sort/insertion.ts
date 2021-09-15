@@ -6,9 +6,9 @@ function insertionSort<T>(arr: T[], comparator: Comparator<T>) {
   for (let i = 1; i < len; i++) {
     curValue = arr[i]
     curIndex = i
-    for (let j = i; j > 0 && comparator(arr[j], arr[j - 1]) < 0; j--) {
-      [arr[j], arr[j - 1]] = [arr[j - 1], arr[j]]
-      curIndex = j - 1
+    while (curIndex > 0 && comparator(curValue, arr[curIndex - 1]) < 0) {
+      arr[curIndex] = arr[curIndex - 1]
+      curIndex--
     }
     arr[curIndex] = curValue
   }

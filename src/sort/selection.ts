@@ -2,7 +2,7 @@ import Comparator from '@/types/helper/Comparator'
 
 function selectionSort<T>(arr: T[], comparator: Comparator<T>) {
   const len = arr.length
-  let minIndex
+  let minIndex: number
   for (let i = 0; i < len; i++) {
     minIndex = i
     for (let j = i + 1; j < len; j++) {
