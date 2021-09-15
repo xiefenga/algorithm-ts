@@ -11,10 +11,6 @@
       "@/*": [
         "src/*"
       ]
-    },
-    "types": [
-      "vite/client",
-      "mocha"
-    ]
+    }
   }
 }
